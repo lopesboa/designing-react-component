@@ -1,0 +1,18 @@
+{
+  "name": "designing-react-component",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/lopesboa/designing-react-component.git",
+  "author": "Lopes Boa <lopesboa1@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^10.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
