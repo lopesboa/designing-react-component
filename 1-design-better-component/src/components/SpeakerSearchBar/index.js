@@ -1,7 +1,7 @@
 import React from 'react';
  const SpeakerSearchBar = () => {
    return (
-     <h1>seachbar</h1>
+     <h1>searchbar</h1>
    )
  }
 
