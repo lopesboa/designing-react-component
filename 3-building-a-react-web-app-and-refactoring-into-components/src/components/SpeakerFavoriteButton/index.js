@@ -1,5 +1,10 @@
-const SpeakerFavoriteButton = ({ isFavorite }) => (
-  <div className={isFavorite ? "heartredbutton" : "heartdarkbutton"}></div>
-);
+const SpeakerFavoriteButton = ({ isFavorite, onFavoriteToggle }) => {
+  return (
+    <div
+      className={isFavorite ? "heartredbutton" : "heartdarkbutton"}
+      onClick={onFavoriteToggle}
+    ></div>
+  );
+};
 
 export default SpeakerFavoriteButton;

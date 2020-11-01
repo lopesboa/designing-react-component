@@ -2,8 +2,7 @@ import { useState } from 'react';
 import Speaker from '../Speaker';
 import SpeakerSearchBar from '../SpeakerSearchBar';
 const Speakers = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const speakers = [
+  const speakersItems = [
     {
       imageSrc: 'speaker-component-1124',
       name: 'Douglas Crockford',
@@ -41,6 +40,23 @@ const Speakers = () => {
         'Eugene Chuvyrov is  a Senior Cloud Architect at Microsoft. He works directly with both startups and enterprises to enable their solutions in Microsoft cloud, and to make Azure better as a result of this work with partners.',
     },
   ];
+  
+  function handleToggleSpeakerFavorite(speakerRec) {
+    return {
+      ...speakerRec,
+      isFavorite: !speakerRec.isFavorite
+    };
+  };
+
+  function handleOnFavoriteToggle(speakerRec) {
+    const toggleSpeakerRec = handleToggleSpeakerFavorite(speakerRec);
+    const speakerIndex = speakers.map((speaker) => speaker.id).indexOf(speakerRec.id);
+    setSpeakers([...speakers.slice(0, speakerIndex), toggleSpeakerRec, ...speakers.slice(speakerIndex + 1)]);
+  };
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [speakers, setSpeakers] = useState(speakersItems);
+
   return (
     <div>
       <SpeakerSearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -51,7 +67,7 @@ const Speakers = () => {
           return searchQuery.length === 0 ? true : targetString.includes(searchQuery.toLowerCase());
         })
         .map((speaker) => (
-          <Speaker key={speaker.id} {...speaker} />
+          <Speaker key={speaker.id} {...speaker} onFavoriteToggle={() => handleOnFavoriteToggle(speaker)} />
         ))}
       </div>
     </div>
