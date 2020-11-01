@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { api } from "../../services/api";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
@@ -18,7 +18,7 @@ const Speakers = () => {
       .indexOf(speakerRec.id);
     try {
       await api.put(`speakers/${speakerRec.id}`, toggleSpeakerRec);
-      setSpeakers([
+      dispatch([
         ...speakers.slice(0, speakerIndex),
         toggleSpeakerRec,
         ...speakers.slice(speakerIndex + 1),
@@ -35,19 +35,44 @@ const Speakers = () => {
     ERROR: "error",
   };
 
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "GET_ALL_SUCCESS":
+        return {
+          ...state,
+          status: REQUEST_STATUS.SUCCESS,
+          speakers: action.speakers,
+        };
+      case "UPDATE_STATUS":
+        return {
+          ...state,
+          speakers: action.status,
+        };
+    }
+  };
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [speakers, setSpeakers] = useState([]);
-  const [status, setStatus] = useState(REQUEST_STATUS.LOADING);
+
+  const [{ speakers, status }, dispatch] = useReducer(reducer, {
+    status: REQUEST_STATUS.LOADING,
+    speakers: [],
+  });
+  // const [status, setStatus] = useState(REQUEST_STATUS.LOADING);
   const [error, setError] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get("speakers");
-        setSpeakers(response.data);
-        setStatus(REQUEST_STATUS.SUCCESS);
+        dispatch({
+          speakers: response.data,
+          type: "GET_ALL_SUCCESS",
+        });
       } catch (error) {
-        setStatus(REQUEST_STATUS.ERROR);
+        dispatch({
+          status: REQUEST_STATUS.ERROR,
+          type: "UPDATE_STATUS",
+        });
         setError(error);
       }
     };
