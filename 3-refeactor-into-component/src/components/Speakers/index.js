@@ -1,4 +1,11 @@
 import { useEffect, useReducer, useState } from "react";
+import {
+  GET_ALL_FAILURE,
+  GET_ALL_SUCCESS,
+  PUT_FAILURE,
+  PUT_SUCCESS
+} from "../../actions/request";
+import requestReducer, { REQUEST_STATUS } from "../../reducers/request";
 import { api } from "../../services/api";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
@@ -11,69 +18,51 @@ const Speakers = () => {
     };
   }
 
-  async function handleOnFavoriteToggle(speakerRec) {
-    const toggleSpeakerRec = handleToggleSpeakerFavorite(speakerRec);
-    const speakerIndex = speakers
-      .map((speaker) => speaker.id)
-      .indexOf(speakerRec.id);
+  const handleOnFavoriteToggle = async (speakerRec) => {
     try {
+      const toggleSpeakerRec = {
+        ...speakerRec,
+        isFavorite: !speakerRec.isFavorite,
+      };
+
       await api.put(`speakers/${speakerRec.id}`, toggleSpeakerRec);
-      dispatch([
-        ...speakers.slice(0, speakerIndex),
-        toggleSpeakerRec,
-        ...speakers.slice(speakerIndex + 1),
-      ]);
-    } catch (error) {
-      setStatus(REQUEST_STATUS.ERROR);
-      setError(error);
-    }
-  }
-
-  const REQUEST_STATUS = {
-    LOADING: "loading",
-    SUCCESS: "success",
-    ERROR: "error",
-  };
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "GET_ALL_SUCCESS":
-        return {
-          ...state,
-          status: REQUEST_STATUS.SUCCESS,
-          speakers: action.speakers,
-        };
-      case "UPDATE_STATUS":
-        return {
-          ...state,
-          speakers: action.status,
-        };
+      dispatch({
+        type: PUT_SUCCESS,
+        record: toggleSpeakerRec,
+      });
+    } catch (e) {
+      dispatch({
+        type: PUT_FAILURE,
+        error: e,
+      });
     }
   };
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [{ speakers, status }, dispatch] = useReducer(reducer, {
-    status: REQUEST_STATUS.LOADING,
-    speakers: [],
-  });
-  // const [status, setStatus] = useState(REQUEST_STATUS.LOADING);
-  const [error, setError] = useState({});
+  const [{ records: speakers, status, error }, dispatch] = useReducer(
+    requestReducer,
+    {
+      records: [],
+      status: REQUEST_STATUS.LOADING,
+      error: null,
+    }
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get("speakers");
         dispatch({
-          speakers: response.data,
-          type: "GET_ALL_SUCCESS",
+          type: GET_ALL_SUCCESS,
+          records: response.data,
         });
-      } catch (error) {
+      } catch (e) {
+        console.log("Loading data error", e);
         dispatch({
-          status: REQUEST_STATUS.ERROR,
-          type: "UPDATE_STATUS",
+          type: GET_ALL_FAILURE,
+          error: e,
         });
-        setError(error);
       }
     };
 
