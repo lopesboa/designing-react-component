@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { compose } from 'recompose';
 import { REQUEST_STATUS } from "../../reducers/request";
 import withRequest from "../HOCs/withRequest";
+import withSpecialMessage from "../HOCs/withSpecialMessage";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
 
-const Speakers = ({ records: speakers, status, error, put, bgColor }) => {
+const Speakers = ({ records: speakers, status, error, put, bgColor, specialMessage }) => {
 
   const handleOnFavoriteToggle = async (speakerRec) => {
     put({
@@ -25,6 +27,12 @@ const Speakers = ({ records: speakers, status, error, put, bgColor }) => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
+      {specialMessage && specialMessage.length > 0 && (
+        <div className="bg-orange-100 border-1-8 borer-orange-500 text-orange-700 p-4 text-2x1" role="alert">
+          <p className="font-bold">Special Message</p>
+          <p>{specialMessage}</p>
+        </div>
+      )}
       {isLoading && <div>Loading</div>}
       {hasErrored && (
         <div>
@@ -57,4 +65,7 @@ const Speakers = ({ records: speakers, status, error, put, bgColor }) => {
     </div>
   );
 };
-export default withRequest('speakers')(Speakers);
+export default compose(
+  withRequest('speakers'),
+  withSpecialMessage(),
+)(Speakers);

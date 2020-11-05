@@ -15,6 +15,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-simple-img": "^2.3.9",
+    "recompose": "^0.30.0",
     "swr": "^0.3.8"
   },
   "devDependencies": {

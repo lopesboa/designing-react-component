@@ -2,6 +2,7 @@ export { default as Footer } from "./Footer";
 export { default as Header } from "./Header";
 export { default as withData } from './HOCs/withData';
 export { default as withRequest } from './HOCs/withRequest';
+export { default as withSpecialMessage } from './HOCs/withSpecialMessage';
 export { default as Layout } from "./Layout";
 export { default as Menu } from "./Menu";
 export { default as Speaker } from "./Speaker";
