@@ -1,74 +1,19 @@
-import { useEffect, useReducer, useState } from "react";
-import {
-  GET_ALL_FAILURE,
-  GET_ALL_SUCCESS,
-  PUT_FAILURE,
-  PUT_SUCCESS
-} from "../../actions/request";
-import requestReducer, { REQUEST_STATUS } from "../../reducers/request";
-import { api } from "../../services/api";
-import withRequest from '../HOCs/withRequest';
+import { useState } from "react";
+import { REQUEST_STATUS } from "../../reducers/request";
+import withRequest from "../HOCs/withRequest";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
-// import swr from 'swr';
-const Speakers = () => {
-  function handleToggleSpeakerFavorite(speakerRec) {
-    return {
-      ...speakerRec,
-      isFavorite: !speakerRec.isFavorite,
-    };
-  }
+
+const Speakers = ({ records: speakers, status, error, put }) => {
 
   const handleOnFavoriteToggle = async (speakerRec) => {
-    try {
-      const toggleSpeakerRec = {
-        ...speakerRec,
-        isFavorite: !speakerRec.isFavorite,
-      };
-
-      await api.put(`speakers/${speakerRec.id}`, toggleSpeakerRec);
-      dispatch({
-        type: PUT_SUCCESS,
-        record: toggleSpeakerRec,
-      });
-    } catch (e) {
-      dispatch({
-        type: PUT_FAILURE,
-        error: e,
-      });
-    }
+    put({
+      ...speakerRec,
+      isFavorite: !speakerRec.isFavorite,
+    });
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [{ records: speakers, status, error }, dispatch] = useReducer(
-    requestReducer,
-    {
-      records: [],
-      status: REQUEST_STATUS.LOADING,
-      error: null,
-    }
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get("speakers");
-        dispatch({
-          type: GET_ALL_SUCCESS,
-          records: response.data,
-        });
-      } catch (e) {
-        console.log("Loading data error", e);
-        dispatch({
-          type: GET_ALL_FAILURE,
-          error: e,
-        });
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const success = status === REQUEST_STATUS.SUCCESS;
   const isLoading = status === REQUEST_STATUS.LOADING;
@@ -112,4 +57,4 @@ const Speakers = () => {
     </div>
   );
 };
-export default withRequest()(Speakers);
+export default withRequest('speakers')(Speakers);
