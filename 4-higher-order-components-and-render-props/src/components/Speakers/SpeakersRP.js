@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { REQUEST_STATUS } from "../../reducers/request";
-import Request from "../RPs/Request";
 import SpecialMessageRenderProps from "../RPs/SpecialMessageRenderProps";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
-
 
 const Speakers = ({ bgColor }) => {
   const [searchQuery, setSearchQuery] = useState("");
