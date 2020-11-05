@@ -5,7 +5,7 @@ export default function Page() {
     <div>
       <Layout>
         {/* <SpeakerSearchBar /> */}
-        <Speakers />
+        <Speakers bgColor="bg-gray-500" />
       </Layout>
     </div>
   );

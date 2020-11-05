@@ -8,7 +8,7 @@ import {
 import requestReducer, { REQUEST_STATUS } from "../../reducers/request";
 import { api } from "../../services/api";
 
-const withRequest = (routeName) => (Component) => () => {
+const withRequest = (routeName) => (Component) => (props) => {
   const [{ records, status, error }, dispatch] = useReducer(requestReducer, {
     status: REQUEST_STATUS.LOADING,
     records: [],
@@ -35,7 +35,7 @@ const withRequest = (routeName) => (Component) => () => {
     fetchData();
   }, [routeName]);
 
-  const props = {
+  const propsLocal = {
     records,
     status,
     error,
@@ -54,7 +54,7 @@ const withRequest = (routeName) => (Component) => () => {
       }
     },
   };
-  return <Component {...props}></Component>;
+  return <Component {...props} {...propsLocal}></Component>;
 };
 
 export default withRequest;

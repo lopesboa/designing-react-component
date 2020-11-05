@@ -4,7 +4,7 @@ import withRequest from "../HOCs/withRequest";
 import Speaker from "../Speaker";
 import SpeakerSearchBar from "../SpeakerSearchBar";
 
-const Speakers = ({ records: speakers, status, error, put }) => {
+const Speakers = ({ records: speakers, status, error, put, bgColor }) => {
 
   const handleOnFavoriteToggle = async (speakerRec) => {
     put({
@@ -20,7 +20,7 @@ const Speakers = ({ records: speakers, status, error, put }) => {
   const hasErrored = status === REQUEST_STATUS.ERROR;
 
   return (
-    <div>
+    <div className={bgColor}>
       <SpeakerSearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
